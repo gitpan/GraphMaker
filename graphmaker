@@ -50,8 +50,6 @@ foreach $elem (@elem)
 close(CNF);
 
 # The program
-$BOX = 2;
-$BOX--;
 $m=0;
 $YGRIDSIZE = 400;
 $YCELLGRIDSIZE = $YGRIDSIZE/$option{'NUMBERYCELLGRIDSIZE'};
@@ -70,7 +68,7 @@ $temp=$option{'YEAR'}%4;
 if ($temp eq 0) {if($days eq 28){$days=29;}}
 
 $days--;
-$XGRIDSIZE = 4+($days -1)*1+($days*$option{'XCELLGRIDSIZE'});
+$XGRIDSIZE = $days+($days*$option{'XCELLGRIDSIZE'});
 $XGIF = $XGRIDSIZE + $XINIT + $XEND;
 $XGRAPH = $XGRIDSIZE + $XINIT;
 $YGIF = $YGRIDSIZE + $YEND + $YINIT;
@@ -91,8 +89,8 @@ $SCALE=$YGRIDSIZE/$RANGE;
    $im->setStyle($black,$white,$white,$white);
    for $i (0..$days)
       {
-      $xspace= $XINIT+2+$option{'XCELLGRIDSIZE'}*$i +$i-1;
-      $im->line($xspace,$YINIT+$BOX,$xspace,$YGRAPH-2,gdStyled);
+      $xspace= $XINIT+$option{'XCELLGRIDSIZE'}*$i +$i;
+      $im->line($xspace,$YINIT,$xspace,$YGRAPH,gdStyled);
       $num = $i+1;
       if ($num < 10)
          {$im->string(gdMediumBoldFont,$xspace-3,$YGRAPH,"$num",$black);}
@@ -120,15 +118,16 @@ $SCALE=$YGRIDSIZE/$RANGE;
       if ($option{'Average'} eq 1) {$m+=$2;$i++;}
       if ($count eq 0){$XOLD=$1;$YOLD=$2;$count=1;next}
       $X=$1; $Y=$2;
-      $xspace= $XINIT+2+$option{'XCELLGRIDSIZE'}*($X-1) +($X-1)-1;
-      $xspaceold= $XINIT+2+$option{'XCELLGRIDSIZE'}*($XOLD-1) +($XOLD-1)-1;
+# +($X-1) are the pixel of the line
+      $xspace= $XINIT+$option{'XCELLGRIDSIZE'}*($X-1) +($X-1);
+      $xspaceold= $XINIT+$option{'XCELLGRIDSIZE'}*($XOLD-1) +($XOLD-1);
       $yspace= $YGRAPH-($Y-$option{'MINYVALUE'})*$SCALE;
       $yspaceold= $YGRAPH-($YOLD-$option{'MINYVALUE'})*$SCALE;
       if ($option{'Bar'} eq 0)
          {$im->line($xspaceold,$yspaceold,$xspace,$yspace,$colour);}
       else
          {
-         if ($1 eq 1)
+         if ($1 eq 2)
             {
             $im->filledRectangle($xspaceold,$yspaceold,
                                  $xspaceold+$middle,$YGRAPH,$colour);
@@ -171,12 +170,12 @@ $SCALE=$YGRIDSIZE/$RANGE;
       $im->setStyle($acolour,$acolour,$acolour,$acolour,$white,$white,$white,$white);
       $m=$m/$i;
       $ym=$YGRAPH-($m-$option{'MINYVALUE'})*$SCALE;
-      $im->line($XINIT+$BOX,$ym,$XGRAPH-$BOX,$ym,gdStyled)
+      $im->line($XINIT,$ym,$XGRAPH,$ym,gdStyled)
       }
-   $im->filledRectangle($XINIT,$YINIT,$XINIT+$BOX,$YGRAPH,$black);
-   $im->filledRectangle($XINIT,$YINIT,$XGRAPH-$BOX,$YINIT+$BOX,$black);
-   $im->filledRectangle($XGRAPH-($BOX+1),$YINIT,$XGRAPH-$BOX,$YGRAPH,$black);
-   $im->filledRectangle($XINIT,$YGRAPH-$BOX,$XGRAPH-$BOX,$YGRAPH,$black);
+   $im->line($XINIT,$YINIT,$XINIT,$YGRAPH,$black);
+   $im->line($XINIT,$YINIT,$XGRAPH,$YINIT,$black);
+   $im->line($XGRAPH,$YINIT,$XGRAPH,$YGRAPH,$black);
+   $im->line($XINIT,$YGRAPH,$XGRAPH,$YGRAPH,$black);
 
    $im->string(gdTinyFont,$XGIF-150,$YGIF -8,"GraphMaker by Fabrizio Pivari",$black);
    open (GRAPH,">$option{'Graph'}") || die "Error: Grafico.gif - $!\n";
@@ -195,7 +194,7 @@ graphmaker: Graph Maker.
 If you want to know more about this tool, you might want
 to read the docs. They came together with graphmaker!
 
-Home: http://www.agip.it/~pivari/graphmaker.html
+Home: http://www.geocities.com/CapeCanaveral/Lab/3469/graphmaker.html
 
 USAGEDESC
     exit(1);
