@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 
-# $Header: graphmaker.pl,v 1.1 1997/01/25 $
+# $Header: graphmaker.pl,v 1.3 1997/01/25 $
 # Written by Fabrizio Pivari
 # A graph maker perl script
 
@@ -26,7 +26,7 @@ $opt_conf="./graphmaker.cnf";
       Graph => './graphmaker.gif',
       Bar => '1',
       Average => '1',
-      Title => 'Graph Maker 1.1',
+      Title => 'Graph Maker 1.3',
       Rcolour => '0',
       Gcolour => '0',
       Bcolour => '255',
@@ -35,8 +35,9 @@ $opt_conf="./graphmaker.cnf";
       Bacolour => '0');
 ($option{'MONTH'},$option{'YEAR'}) = (localtime(time))[4,5];
 
-&GetOptions("conf=s") || &printusage ;
+&GetOptions("conf=s","help") || &printusage ;
 
+if ($opt_help) {&printusage};
 open (CNF, $opt_conf) || die;
 while (<CNF>) {
 s/\t/ /g;  #replace tabs by space
@@ -189,7 +190,12 @@ exit(0);
 sub printusage {
     print <<USAGEDESC;
 
-graphmaker: Graph Maker.
+usage:
+        graphmaker [-options ...]
+
+where options include:
+    -help                        print out this message
+    -conf  file                  the configuration file (default graphmaker.cnf)
 
 If you want to know more about this tool, you might want
 to read the docs. They came together with graphmaker!
