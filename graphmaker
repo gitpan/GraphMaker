@@ -1,0 +1,203 @@
+#!/usr/local/bin/perl
+
+# $Header: graphmaker.pl,v 1.1 1997/01/25 $
+# Written by Fabrizio Pivari
+# A graph maker perl script
+
+use GD;
+use Getopt::Long;
+
+sub main{
+
+$opt_conf="./graphmaker.cnf";
+
+@elem=("NUMBERYCELLGRIDSIZE","MAXYVALUE","MINYVALUE","XCELLGRIDSIZE","YEAR",
+       "MONTH","Data","Graph","Bar","Average","Title","Rcolour","Gcolour",
+       "Bcolour","Racolour","Gacolour","Bacolour");
+
+%option=(
+      NUMBERYCELLGRIDSIZE => '8',
+      MAXYVALUE => '7748',
+      MINYVALUE => '6500',
+      XCELLGRIDSIZE => '18',
+      YEAR => '',
+      MONTH => '',
+      Data => './graphmaker.dat',
+      Graph => './graphmaker.gif',
+      Bar => '1',
+      Average => '1',
+      Title => 'Graph Maker 1.1',
+      Rcolour => '0',
+      Gcolour => '0',
+      Bcolour => '255',
+      Racolour => '255',
+      Gacolour => '255',
+      Bacolour => '0');
+($option{'MONTH'},$option{'YEAR'}) = (localtime(time))[4,5];
+
+&GetOptions("conf=s") || &printusage ;
+
+open (CNF, $opt_conf) || die;
+while (<CNF>) {
+s/\t/ /g;  #replace tabs by space
+next if /^\s*\#/; #ignore comment lines
+next if /^\s*$/;  #ignore empty lines
+foreach $elem (@elem)
+   {
+   if (/\s*$elem\s*:\s*(.*)/) { $option{$elem}=$1; }
+   }
+}
+close(CNF);
+
+# The program
+$BOX = 2;
+$BOX--;
+$m=0;
+$YGRIDSIZE = 400;
+$YCELLGRIDSIZE = $YGRIDSIZE/$option{'NUMBERYCELLGRIDSIZE'};
+$XINIT = 30;
+$XEND = 8;
+$YINIT =20;
+$YEND = 20;
+$month = ('January','February','March','April','May','June','July',
+          'August','September','October','November','December')[$option{'MONTH'}];
+#$month = ('Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio',
+#          'Agosto','Settembre','Ottobre','Novembre','Dicembre')[$option{'MONTH'}];
+$days = ('31','28','31','30','31','30','31','31','30','31','30','31')[$option{'MONTH'}];
+
+#leap year
+$temp=$option{'YEAR'}%4;
+if ($temp eq 0) {if($days eq 28){$days=29;}}
+
+$days--;
+$XGRIDSIZE = 4+($days -1)*1+($days*$option{'XCELLGRIDSIZE'});
+$XGIF = $XGRIDSIZE + $XINIT + $XEND;
+$XGRAPH = $XGRIDSIZE + $XINIT;
+$YGIF = $YGRIDSIZE + $YEND + $YINIT;
+$YGRAPH = $YGRIDSIZE + $YINIT;
+$RANGE=$option{'MAXYVALUE'}-$option{'MINYVALUE'};
+$SCALE=$YGRIDSIZE/$RANGE;
+
+   $im=new GD::Image($XGIF,$YGIF);
+   $white=$im->colorAllocate(255,255,255);
+   $black=$im->colorAllocate(0,0,0);
+   $colour=$im->colorAllocate($option{'Rcolour'},$option{'Gcolour'},$option{'Bcolour'});
+   $acolour=$im->colorAllocate($option{'Racolour'},$option{'Gacolour'},$option{'Bacolour'});
+   # GRID
+   $im->transparent($white);
+   $im->filledRectangle(0,0,$XGIF,$YGIF,$white);
+
+# Dot style
+   $im->setStyle($black,$white,$white,$white);
+   for $i (0..$days)
+      {
+      $xspace= $XINIT+2+$option{'XCELLGRIDSIZE'}*$i +$i-1;
+      $im->line($xspace,$YINIT+$BOX,$xspace,$YGRAPH-2,gdStyled);
+      $num = $i+1;
+      if ($num < 10)
+         {$im->string(gdMediumBoldFont,$xspace-3,$YGRAPH,"$num",$black);}
+      else {$im->string(gdMediumBoldFont,$xspace-3 -2,$YGRAPH,"$num",$black);}
+      }
+
+   $YCELLVALUE=($option{'MAXYVALUE'}-$option{'MINYVALUE'})/$option{'NUMBERYCELLGRIDSIZE'};
+   for $i (0..$option{'NUMBERYCELLGRIDSIZE'})
+      {
+      $num=$option{'MINYVALUE'}+$YCELLVALUE*($option{'NUMBERYCELLGRIDSIZE'}-$i);
+      $im->string(gdMediumBoldFont,0,$YINIT+$YCELLGRIDSIZE*$i -6,"$num",$black);
+      }
+   $option{'Title'} .= " ($month)";
+   $im->string(gdLargeFont,$XGRIDSIZE/2-80,0,$option{'Title'},$black);
+
+   $count=0;
+   $odd_even = $option{'XCELLGRIDSIZE'}%2;
+   #odd
+   if ($odd_even eq 1) {$middle = $option{'XCELLGRIDSIZE'}/2 +0.5;}
+   else {$middle = $option{'XCELLGRIDSIZE'}/2 +0.5;}
+   open (DATA,$option{'Data'});
+   while (<DATA>)
+      {
+      /(.*):(.*)/;
+      if ($option{'Average'} eq 1) {$m+=$2;$i++;}
+      if ($count eq 0){$XOLD=$1;$YOLD=$2;$count=1;next}
+      $X=$1; $Y=$2;
+      $xspace= $XINIT+2+$option{'XCELLGRIDSIZE'}*($X-1) +($X-1)-1;
+      $xspaceold= $XINIT+2+$option{'XCELLGRIDSIZE'}*($XOLD-1) +($XOLD-1)-1;
+      $yspace= $YGRAPH-($Y-$option{'MINYVALUE'})*$SCALE;
+      $yspaceold= $YGRAPH-($YOLD-$option{'MINYVALUE'})*$SCALE;
+      if ($option{'Bar'} eq 0)
+         {$im->line($xspaceold,$yspaceold,$xspace,$yspace,$colour);}
+      else
+         {
+         if ($1 eq 1)
+            {
+            $im->filledRectangle($xspaceold,$yspaceold,
+                                 $xspaceold+$middle,$YGRAPH,$colour);
+            $im->rectangle($xspaceold,$yspaceold,
+                           $xspaceold+$middle,$YGRAPH,$black);
+            }
+         else
+            {
+            $im->filledRectangle($xspaceold-$middle,$yspaceold,
+                                 $xspaceold+$middle,$YGRAPH,$colour);
+            $im->rectangle($xspaceold-$middle,$yspaceold,
+                           $xspaceold+$middle,$YGRAPH,$black);
+            }
+         }
+      $XOLD=$X; $YOLD=$Y;
+      }
+   if ($option{'Bar'} ne 0)
+      {
+      $days++;
+      if ($X eq $days)
+         {
+         $im->filledRectangle($xspace-$middle,$yspace,
+                              $xspace,$YGRAPH,$colour);
+         $im->rectangle($xspace-$middle,$yspace,
+                        $xspace,$YGRAPH,$black);
+         }
+      else
+         {
+         $im->filledRectangle($xspace-$middle,$yspace,
+                              $xspace+$middle,$YGRAPH,$colour);
+         $im->rectangle($xspace-$middle,$yspace,
+                        $xspace+$middle,$YGRAPH,$black);
+         }
+      }
+   close (DATA);
+
+   if ($option{'Average'} eq 1)
+      {
+      # Line style
+      $im->setStyle($acolour,$acolour,$acolour,$acolour,$white,$white,$white,$white);
+      $m=$m/$i;
+      $ym=$YGRAPH-($m-$option{'MINYVALUE'})*$SCALE;
+      $im->line($XINIT+$BOX,$ym,$XGRAPH-$BOX,$ym,gdStyled)
+      }
+   $im->filledRectangle($XINIT,$YINIT,$XINIT+$BOX,$YGRAPH,$black);
+   $im->filledRectangle($XINIT,$YINIT,$XGRAPH-$BOX,$YINIT+$BOX,$black);
+   $im->filledRectangle($XGRAPH-($BOX+1),$YINIT,$XGRAPH-$BOX,$YGRAPH,$black);
+   $im->filledRectangle($XINIT,$YGRAPH-$BOX,$XGRAPH-$BOX,$YGRAPH,$black);
+
+   $im->string(gdTinyFont,$XGIF-150,$YGIF -8,"GraphMaker by Fabrizio Pivari",$black);
+   open (GRAPH,">$option{'Graph'}") || die "Error: Grafico.gif - $!\n";
+   print GRAPH $im -> gif;
+   close (GRAPH);
+}
+
+main;
+exit(0);
+
+sub printusage {
+    print <<USAGEDESC;
+
+graphmaker: Graph Maker.
+
+If you want to know more about this tool, you might want
+to read the docs. They came together with graphmaker!
+
+Home: http://www.agip.it/~pivari/graphmaker.html
+
+USAGEDESC
+    exit(1);
+}
+

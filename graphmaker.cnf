@@ -1,0 +1,35 @@
+#
+# Configure the value of the variables
+#
+# It's better if $MAXVALUE -$MINVALUE is a $NUMBERYCELLGRIDESIZE divisible
+# number
+NUMBERYCELLGRIDSIZE: 8
+MAXYVALUE: 7748
+MINYVALUE: 6500
+XCELLGRIDSIZE: 18
+# both 96 or 1996 are correct
+# Remember 0 is January, 1 February ...
+YEAR: 96
+MONTH: 8
+#($MONTH,$YEAR) = (localtime(time))[4,5];
+# input file in the form
+# day:number
+Data: ./graphmaker.dat
+# output gif
+Graph: ./graphmaker.gif
+# $Bar: 1 Bar Diagram
+Bar: 1
+# $Average: 1 for Average Line
+Average: 1
+Title: ENI: Milan Stock Exchange
+#$Title: Graph Maker 1.1
+# Default is "$Title ($month)"
+#
+# Default line or bar colour
+Rcolour: 0
+Gcolour: 0
+Bcolour: 255
+# Average colour
+Racolour: 255
+Gacolour: 255
+Bacolour: 0

@@ -1,1 +1,5 @@
 1.0 First pubblic version
+
+1.1 Added the option -conf file_name
+    Now you can change the parameters in one or more external files
+    Minor Bugs
