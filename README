@@ -1,15 +1,23 @@
-Graph Maker 1.3
+With GraphMaker 2.0 you can resolve this problem: to make a monthly
+bar or line graph. With the script you can make it on the fly or use cron to
+upgrade it every day.
+Now you can make monthly graphs via Internet at 
+http://www.geocities.com/CapeCanaveral/Lab/3469 or you can install it on your
+server so that your users can make monthly graphs in your Intranet.
 
-My problem was: I wanted to generate simple graphs (in x the days and in y
-the data) to use in html documents (gif format).
-Why did I have to use gnuplot and then to convert the output format in gif?
-So I try to make a simple script PERL that use GD.pm library to generate gif.
+For the script I use perl5.00x (http://www.perl.com) and GD.pm library
+(http://www-genome.wi.mit.edu/ftp/pub/software/WWW/GD.html)
+For the cgi-bin I use perl5.00x, GD.pm, and cgi-lib.pl
+(http://www.bio.cam.ac.uk/cgi-lib/) or CGI.pm 
+(http://www-genome.wi.mit.edu/ftp/pub/software/WWW/) with cgi-lib.pl support
 
-At the moment if you want change the default parameters you have to edit 
-graphmaker.pl and change the values in the part "Configure the value of the
-variables"
+Read the INSTALL.CGI file if you want to install the tool on your Web.
+Read the INSTALL file if you want to use the tool in standalone mode.
+In docs directory tou can find other documentation.
+Enjoy it!
 
-Send me your observations, patches, ...
+Send me your suggestions.
 
 Fabrizio Pivari
 Pivari@geocities.com
+http://www.geocities.com/CapeCanaveral/Lab/3469

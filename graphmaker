@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl
 
-# $Header: graphmaker.pl,v 1.3 1997/01/25 $
+# $Header: GraphMaker.pl,v 1.3 1997/01/25 $
 # Written by Fabrizio Pivari
 # A graph maker perl script
 
