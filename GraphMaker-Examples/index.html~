@@ -1,0 +1,12 @@
+<HTML>
+<HEAD>
+<TITLE>Examples</TITLE>
+</HEAD>
+<BODY>
+<H1>Examples</H1>
+Here there are some nice examples made with Graph Maker 1.00.<P>
+<LI>Exchange: liras for a dollar (October) <A HREF="./dollarline.gif">the line graph</A>
+<LI>Exchange: liras for a dollar (October) <A HREF="./dollarbar.gif">the bar graph</A><P>
+This is the <A HREF="./graphmaker.dat">input file</A><P>
+</BODY>
+</HTML>

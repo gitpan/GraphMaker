@@ -1,0 +1,15 @@
+Graph Maker 1.0
+
+My problem was: I wanted to generate simple graphs (in x the days and in y
+the data) to use in html documents (gif format).
+Why did I have to use gnuplot and then to convert the output format in gif?
+So I try to make a simple script PERL that use GD.pm library to generate gif.
+
+At the moment if you want change the default parameters you have to edit 
+graphmaker.pl and change the values in the part "Configure the value of the
+variables"
+
+Send me your observations, patches, ...
+
+Fabrizio Pivari
+Fabrizio.Pivari@agip.it 
