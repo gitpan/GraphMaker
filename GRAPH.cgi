@@ -1,6 +1,6 @@
 #!/usr/local/bin/perl -Tw
 
-# $Header: GraphMaker.cgi,v 2.0 1997/06/19 $
+# $Header: GraphMaker.cgi,v 2.1 1997/06/19 $
 # Written by Fabrizio Pivari
 # A graph maker perl cgi-bin
 
@@ -32,6 +32,13 @@ $Bcolour = $input{'Bcolour'};
 $Racolour = $input{'Racolour'};
 $Gacolour = $input{'Gacolour'};
 $Bacolour = $input{'Bacolour'};
+$Rbgcolour = $input{'Rbgcolour'};
+$Gbgcolour = $input{'Gbgcolour'};
+$Bbgcolour = $input{'Bbgcolour'};
+$Rfgcolour = $input{'Rfgcolour'};
+$Gfgcolour = $input{'Gfgcolour'};
+$Bfgcolour = $input{'Bfgcolour'};
+$Transparent = $input{'Transparent'};
 
 
        $NUMBERYCELLGRIDSIZE = 8;
@@ -70,36 +77,33 @@ $RANGE=$MAXYVALUE-$MINYVALUE;
 $SCALE=$YGRIDSIZE/$RANGE;
 
    $im=new GD::Image($XGIF,$YGIF);
-   $white=$im->colorAllocate(255,255,255);
-   $black=$im->colorAllocate(0,0,0);
+   $bg=$im->colorAllocate($Rbgcolour,$Gbgcolour,$Bbgcolour);
+   $fg=$im->colorAllocate($Rfgcolour,$Gfgcolour,$Bfgcolour);
    $colour=$im->colorAllocate($Rcolour,$Gcolour,$Bcolour);
    $acolour=$im->colorAllocate($Racolour,$Gacolour,$Bacolour);
    # GRID
-   $im->transparent($white);
-   $im->filledRectangle(0,0,$XGIF,$YGIF,$white);
+   if ($Transparent eq "yes") {$im->transparent($bg);}
+   $im->filledRectangle(0,0,$XGIF,$YGIF,$bg);
 
 # Dot style
-   $im->setStyle($black,$white,$white,$white);
+   $im->setStyle($fg,$bg,$bg,$bg);
    for $i (0..$days)
       {
       $xspace= $XINIT+$XCELLGRIDSIZE*$i +$i;
       $im->line($xspace,$YINIT,$xspace,$YGRAPH,gdStyled);
       $num = $i+1;
       if ($num < 10)
-         {$im->string(gdMediumBoldFont,$xspace-3,$YGRAPH,"$num",$black);}
-      else {$im->string(gdMediumBoldFont,$xspace-3 -2,$YGRAPH,"$num",$black);}
+         {$im->string(gdMediumBoldFont,$xspace-3,$YGRAPH,"$num",$fg);}
+      else {$im->string(gdMediumBoldFont,$xspace-3 -2,$YGRAPH,"$num",$fg);}
       }
 
    $YCELLVALUE=($MAXYVALUE-$MINYVALUE)/$NUMBERYCELLGRIDSIZE;
    for $i (0..$NUMBERYCELLGRIDSIZE)
       {
       $num=$MINYVALUE+$YCELLVALUE*($NUMBERYCELLGRIDSIZE-$i);
-      $im->string(gdMediumBoldFont,0,$YINIT+$YCELLGRIDSIZE*$i -6,"$num",$black);
+      $im->string(gdMediumBoldFont,0,$YINIT+$YCELLGRIDSIZE*$i -6,"$num",$fg);
       }
-# Options 2.1
-#   $Title .= " ($month)";
-#   $Title .= " ($month $YEAR)";
-   $im->string(gdLargeFont,$XGRIDSIZE/2-80,0,$Title,$black);
+   $im->string(gdLargeFont,$XGRIDSIZE/2-40,0,$Title,$fg);
 
    $count=0;
    $odd_even = $XCELLGRIDSIZE%2;
@@ -126,14 +130,14 @@ $SCALE=$YGRIDSIZE/$RANGE;
             $im->filledRectangle($xspaceold,$yspaceold,
                                  $xspaceold+$middle,$YGRAPH,$colour);
             $im->rectangle($xspaceold,$yspaceold,
-                           $xspaceold+$middle,$YGRAPH,$black);
+                           $xspaceold+$middle,$YGRAPH,$fg);
             }
          else
             {
             $im->filledRectangle($xspaceold-$middle,$yspaceold,
                                  $xspaceold+$middle,$YGRAPH,$colour);
             $im->rectangle($xspaceold-$middle,$yspaceold,
-                           $xspaceold+$middle,$YGRAPH,$black);
+                           $xspaceold+$middle,$YGRAPH,$fg);
             }
          }
       $XOLD=$X; $YOLD=$Y;
@@ -146,31 +150,31 @@ $SCALE=$YGRIDSIZE/$RANGE;
          $im->filledRectangle($xspace-$middle,$yspace,
                               $xspace,$YGRAPH,$colour);
          $im->rectangle($xspace-$middle,$yspace,
-                        $xspace,$YGRAPH,$black);
+                        $xspace,$YGRAPH,$fg);
          }
       else
          {
          $im->filledRectangle($xspace-$middle,$yspace,
                               $xspace+$middle,$YGRAPH,$colour);
          $im->rectangle($xspace-$middle,$yspace,
-                        $xspace+$middle,$YGRAPH,$black);
+                        $xspace+$middle,$YGRAPH,$fg);
          }
       }
 
    if ($Average eq 1)
       {
       # Line style
-      $im->setStyle($acolour,$acolour,$acolour,$acolour,$white,$white,$white,$white);
+      $im->setStyle($acolour,$acolour,$acolour,$acolour,$bg,$bg,$bg,$bg);
       $m=$m/$i;
       $ym=$YGRAPH-($m-$MINYVALUE)*$SCALE;
       $im->line($XINIT,$ym,$XGRAPH,$ym,gdStyled)
       }
-   $im->line($XINIT,$YINIT,$XINIT,$YGRAPH,$black);
-   $im->line($XINIT,$YINIT,$XGRAPH,$YINIT,$black);
-   $im->line($XGRAPH,$YINIT,$XGRAPH,$YGRAPH,$black);
-   $im->line($XINIT,$YGRAPH,$XGRAPH,$YGRAPH,$black);
+   $im->line($XINIT,$YINIT,$XINIT,$YGRAPH,$fg);
+   $im->line($XINIT,$YINIT,$XGRAPH,$YINIT,$fg);
+   $im->line($XGRAPH,$YINIT,$XGRAPH,$YGRAPH,$fg);
+   $im->line($XINIT,$YGRAPH,$XGRAPH,$YGRAPH,$fg);
 
-   $im->string(gdTinyFont,$XGIF-150,$YGIF -8,"GraphMaker by Fabrizio Pivari",$black);
+   $im->string(gdTinyFont,$XGIF-150,$YGIF -8,"GraphMaker by Fabrizio Pivari",$fg);
    open (GRAPH,">$Graph") || die "Error: Grafico.gif - $!\n";
    print GRAPH $im -> gif;
    close (GRAPH);
@@ -180,7 +184,7 @@ $SCALE=$YGRIDSIZE/$RANGE;
    print &HtmlTop ("$Title");
 
 print qq!<img src="/test/GRAPH.gif"><p>\n!;
-print qq!Generated with GraphMaker-2.0 written by <a href="mailto:Pivari\@geocities.com">Fabrizio Pivari</a>\n!;
+print qq!Generated with GraphMaker-2.1 written by <a href="mailto:Pivari\@geocities.com">Fabrizio Pivari</a>\n!;
 
 # Close the document cleanly
    print &HtmlBot;

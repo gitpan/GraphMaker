@@ -21,11 +21,21 @@ Graph: ./graphmaker.gif
 Bar: 1
 # $Average: 1 for Average Line
 Average: 1
+#$Title: Graph Maker 2.1
 Title: ENI: Milan Stock Exchange
-#$Title: Graph Maker 1.3
-# Default is "$Title ($month)"
 #
-# Default line or bar colour
+# Colour
+# Default Transparent Background: yes
+Transparent: no
+# Background RGB Colour: 255,255,255
+Rbgcolour: 0
+Gbgcolour: 255
+Bbgcolour: 255
+# Foreground RGB Colour: 0,0,0
+Rfgcolour: 0
+Gfgcolour: 0
+Bfgcolour: 0
+# Default line or bar RGB Colour: 0,0,255
 Rcolour: 0
 Gcolour: 0
 Bcolour: 255

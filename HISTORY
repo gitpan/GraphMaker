@@ -11,3 +11,6 @@
 
 2.0 GraphMaker is now also a cgi-bin
     Detailer Documentation
+
+2.1 Added Background Colour (or transparent) and Foreground Colour Options
+    Added Title Option

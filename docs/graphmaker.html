@@ -3,17 +3,16 @@
 <HTML>
 <HEAD>
 <TITLE>
-GraphMaker 2.0
+GraphMaker 2.1
 </TITLE>
 </HEAD>
 
 <BODY>
 <H1>GraphMaker</H1>
 <H2>by <A HREF="mailto:Pivari@geocities.com">Fabrizio Pivari</A></H2>
-<H3>version 2.0 1997/06/19</H3>
+<H3>version 2.1 1997/06/19</H3>
 <P>
-<FORM METHOD="post" ACTION="http://wwwinfo/cgi-bin/GRAPH.cgi">
-<B>Title</B>: <input name="Title" value="Graph Maker 2.0 example" size=50>
+<FORM METHOD="post" ACTION="http://www.agip.it/cgi-bin/GRAPH.cgi">
 <TABLE BORDER=0 CELLSPACING=2 CELLPADDING=2>
 <TR>
 <TD VALIGN=top>
@@ -45,13 +44,36 @@ GraphMaker 2.0
 <B>Separator</B>: <input name="separator" value=" " size=1> (Default is blank)<BR>
 <B>Min Y Value</B>: <input name="MINYVALUE" value="6400" size=10><BR>
 <B>Max Y Value</B>: <input name="MAXYVALUE" value="7800" size=10><BR>
+<B>Title</B>: <input name="Title" value="GraphMaker 2.1" size=50><BR>
 <B>Month</B>: <input name="MONTH" value="" size=2> (Default is the current)
 Remember 0 is January, 1 February and so on<BR>
 <B>Year</B>: <input name="YEAR" value="" size=2> (Default is the current)<BR>
-<B>Line or Bar Graph</B><INPUT TYPE="checkbox" NAME="Bar" value="0" CHECKED>(Default is Line)<BR>
+<B>Line Graph<INPUT TYPE="radio" NAME="Bar" value="0" CHECKED> Bar Graph</B><INPUT TYPE="radio" NAME="Bar" value="1"><BR>
 <B>Average Line</B><INPUT TYPE="checkbox" NAME="Average" value="1" CHECKED><BR>
 <B>Colours:</B><BR>
    <TABLE BORDER=0>
+   <TR>
+   <TD><INPUT TYPE="checkbox" NAME="Transparent" value="yes" CHECKED></TD>
+   <TD>Transparent Background</TD>
+   </TR>
+   <TR>
+   <TD>
+   <TR>
+   <TD>
+   <input name="Rbgcolour" value="255" size=3>
+   <input name="Gbgcolour" value="255" size=3>
+   <input name="Bbgcolour" value="255" size=3>
+   </TD>
+   <TD>Background Colour in RGB mode</TD>
+   </TR>
+   <TR>
+   <TD>
+   <input name="Rfgcolour" value="0" size=3>
+   <input name="Gfgcolour" value="0" size=3>
+   <input name="Bfgcolour" value="0" size=3>
+   </TD>
+   <TD>Foreground Colour in RGB mode</TD>
+   </TR>
    <TR>
    <TD>
    <input name="Rcolour" value="0" size=3>
@@ -80,7 +102,8 @@ After saving your Graph you can use the gif to
 <A HREF="VRML.html">create a graph Texture Map in VRML</A>.<P>
 <A HREF="GraphMaker.tar.gz"> Source Code</A><P>
 <IMG SRC="new.gif" WIDTH=28 HEIGHT=11>You can also find the source code at
-CPAN authors/Fabrizio_Pivari/<P>
+<A HREF="http://www.perl.org/CPAN/authors/Fabrizio_Pivari">
+CPAN authors/Fabrizio_Pivari/</A><P>
 <IMG SRC="new.gif" WIDTH=28 HEIGHT=11>With version 2.0 in the source code you
 can find a CGI-BIN program with the same features of the PERL script
 <IMG SRC="new.gif" WIDTH=28 HEIGHT=11><P>
@@ -122,11 +145,21 @@ Graph: ./graphmaker.gif
 Bar: 1
 # $Average: 1 for Average Line
 Average: 1
+#$Title: Graph Maker 2.1
 Title: ENI: Milan Stock Exchange
-#$Title: Graph Maker 1.3
-# Default is "$Title ($month)"
 #
-# Default line or bar colour
+# Colour
+# Default Transparent Background: yes
+Transparent: no
+# Background RGB Colour: 255,255,255
+Rbgcolour: 0
+Gbgcolour: 255
+Bbgcolour: 255
+# Foreground RGB Colour: 0,0,0
+Rfgcolour: 0
+Gfgcolour: 0
+Bfgcolour: 0
+# Default line or bar RGB Colour: 0,0,255
 Rcolour: 0
 Gcolour: 0
 Bcolour: 255
